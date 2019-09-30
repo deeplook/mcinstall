@@ -84,6 +84,5 @@ TO DO
 - improve logging executed commands to reproduce them as a shell script
 - add self.clean_dest_path to MinicondaInstaller.__init__
 - same with self.download_path
-- support Windows
-    - https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html
+- support Windows, see https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html
 - improve configuration
