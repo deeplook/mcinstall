@@ -86,3 +86,5 @@ TO DO
 - same with self.download_path
 - support Windows, see https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html
 - improve configuration
+- turn this into a nice package
+- make a sample screencast with asciinema
