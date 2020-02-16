@@ -138,7 +138,7 @@ class MinicondaInstaller:
                 if p.returncode != 0:
                     self.log(str(stdout))
                     self.log(str(stderr))
-                    raise ValueError("Installation Failed...")
+                    raise ValueError("Installation failed...")
                 else:
                     os.remove("temp.bat")
      
