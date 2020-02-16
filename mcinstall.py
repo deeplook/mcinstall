@@ -5,7 +5,7 @@ A script to quickly make/provision a fresh Miniconda installation from scratch.
 
 This will download a Miniconda binary from https://repo.continuum.io/miniconda/
 like https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh,
-unpack and install it locally. For windows downloads Miniconda Binary from
+unpack and install it locally. For Windows downloads Miniconda Binary from
 https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe,
 This is tested on MacOS, Linux and Windows.
 
@@ -132,13 +132,13 @@ class MinicondaInstaller:
                 exec_cmd = f'start /wait "" {mc_blob_path} /InstallationType=JustMe /RegisterPython=0 /S /D={self.clean_dest_path}'
                 with open("temp.bat", "w") as fh:
                     fh.write(exec_cmd)
-                p = subprocess.Popen("temp_ex_bat.bat", shell=True, stdout=subprocess.PIPE)
+                p = subprocess.Popen("temp.bat", shell=True, stdout=subprocess.PIPE)
                 stdout, stderr = p.communicate()
                 print(p.returncode)
                 if p.returncode != 0:
                     self.log(str(stdout))
                     self.log(str(stderr))
-                    raise ValueError("Instllation Failed...")
+                    raise ValueError("Installation Failed...")
                 else:
                     os.remove("temp.bat")
      
@@ -146,7 +146,7 @@ class MinicondaInstaller:
                 exec_cmd = f"bash {mc_blob_path} -b -f -p {self.clean_dest_path}"
                 if verbose:
                      print(f"Running command: {exec_cmd}")
-                output = subprocess.check_output(exec_cmd.split(), shell=True)
+                output = subprocess.check_output(exec_cmd.split())
                 print(output.decode("utf8"))
             self.log(exec_cmd)
 
@@ -160,7 +160,7 @@ class MinicondaInstaller:
         
     def _activate_conda_windows(self):
         """
-        Activates conda on windows. Conda activation is mandatory on windows to install
+        Activates conda on Windows. Conda activation is mandatory on Windows to install
         pip and other conda dependencies.
         """
         activate_cmd = fr"{self.clean_dest_path}\condabin\activate"
@@ -185,21 +185,23 @@ class MinicondaInstaller:
                 # This will give output earlier when installed individually.
                 if config["system"] == "Windows":
                     install_cmd = f"pip install {dep}"
+                    output = subprocess.check_output(install_cmd.split(), shell=True)
                 else:
                     install_cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
+                    output = subprocess.check_output(install_cmd.split())
                 if verbose:
                     print(f"Running command: {install_cmd}")
-                output = subprocess.check_output(install_cmd.split(), shell=True)
                 self.log(install_cmd)
                 print(output.decode("utf8"))
         if dependencies_path:
             if config["system"] == "Windows":
                 install_cmd = f"pip install -r {dependencies_path}"
+                output = subprocess.check_output(install_cmd.split(), shell=True)
             else:
                 install_cmd = f"{self.clean_dest_path}/bin/pip install -r {dependencies_path}"
+                output = subprocess.check_output(install_cmd.split())
             if verbose:
                 print(f"Running command: {install_cmd}")
-            output = subprocess.check_output(install_cmd.split())
             self.log(install_cmd)
             print(output.decode("utf8"))
 
@@ -221,11 +223,12 @@ class MinicondaInstaller:
                 # This will give output earlier when installed individually.
                 if config["system"] == "Windows":
                     install_cmd = fr"{self.clean_dest_path}\condabin\conda install -y {dep}"
+                    output = subprocess.check_output(install_cmd.split(), shell=True)
                 else:
                     install_cmd = f"{self.clean_dest_path}/bin/conda install -y {dep}"
+                    output = subprocess.check_output(install_cmd.split())
                 if verbose:
                     print(f"Running command: {install_cmd}")
-                output = subprocess.check_output(install_cmd.split(), shell=True)
                 self.log(install_cmd)
                 print(output.decode("utf8"))
         if dependencies_path:
@@ -233,13 +236,14 @@ class MinicondaInstaller:
                 install_cmd = (
                     fr"{self.clean_dest_path}\condabin\conda install -y --file {dependencies_path}"
                 )
+                output = subprocess.check_output(install_cmd.split(), shell=True)
             else:
                 install_cmd = (
                     f"{self.clean_dest_path}/bin/conda install -y --file {dependencies_path}"
                 )
+                output = subprocess.check_output(install_cmd.split())
             if verbose:
                 print(f"Running command: {install_cmd}")
-            output = subprocess.check_output(install_cmd.split(), shell=True)
             self.log(install_cmd)
             print(output.decode("utf8"))
         if environment_path:
@@ -247,13 +251,14 @@ class MinicondaInstaller:
                 install_cmd = (
                    fr"{self.clean_dest_path}\condabin\conda env create --file {environment_path}"
                 )
+                output = subprocess.check_output(install_cmd.split(), shell=True)
             else:
                 install_cmd = (
                    f"{self.clean_dest_path}/bin/conda env create --file {environment_path}"
                 )
+                output = subprocess.check_output(install_cmd.split())
             if verbose:
                 print(f"Running command: {install_cmd}")
-            output = subprocess.check_output(install_cmd.split(), shell=True)
             self.log(install_cmd)
             print(output.decode("utf8"))
 
