@@ -5,8 +5,8 @@ A script to quickly make/provision a fresh Miniconda installation from scratch.
 
 This will download a Miniconda binary from https://repo.continuum.io/miniconda/
 like https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh,
-unpack and install it locally. It was tested on macOS and Linux ok, but will
-fail on Windows (patches welcome).
+unpack and install it locally. It was tested on macOS and Linux ok, and has
+some experimental Windows support.
 
 This script has no external dependencies, but expects to be run with Python 3.
 
@@ -84,7 +84,7 @@ TO DO
 - improve logging executed commands to reproduce them as a shell script
 - add self.clean_dest_path to MinicondaInstaller.__init__
 - same with self.download_path
-- support Windows, see https://docs.conda.io/projects/conda/en/latest/user-guide/install/windows.html
+- consolidate Windows support
 - improve configuration
 - turn this into a nice package
 - make a sample screencast with asciinema
