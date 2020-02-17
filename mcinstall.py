@@ -80,7 +80,7 @@ class MinicondaInstaller:
     def __del__(self):
         if self.verbose and self.installed_ok:
             if config["system"] == "Windows":
-                cmd = fr"source {self.clean_dest_path}\condabin\activate"
+                cmd = fr"{self.clean_dest_path}\condabin\activate"
             else:
                 cmd = f"source {self.clean_dest_path}/bin/activate"
             print(f'Run this to start using your fresh Miniconda: "{cmd}".')
@@ -127,12 +127,12 @@ class MinicondaInstaller:
                 print(f"Copying to {mc_blob_path} ...")
             mc_blob_path.write_bytes(mc_blob)
             self.log(f"mv {config['mc_blob_name']} {mc_blob_path}")
-        if not (self.clean_dest_path / "bin" / "conda").exists():
+        if not ((self.clean_dest_path / "bin" / "conda").exists() or (self.clean_dest_path / "condabin" / "conda.bat").exists()):
             if config["system"] == "Windows":
                 exec_cmd = f'start /wait "" {mc_blob_path} /InstallationType=JustMe /RegisterPython=0 /S /D={self.clean_dest_path}'
                 with open("temp.bat", "w") as fh:
                     fh.write(exec_cmd)
-                p = subprocess.Popen("temp.bat", shell=True, stdout=subprocess.PIPE)
+                p = subprocess.Popen("temp.bat", stdout=subprocess.PIPE)
                 stdout, stderr = p.communicate()
                 print(p.returncode)
                 if p.returncode != 0:
@@ -158,15 +158,6 @@ class MinicondaInstaller:
 
         self.installed_ok = True
         
-    def _activate_conda_windows(self):
-        """
-        Activates conda on Windows. Conda activation is mandatory on Windows to install
-        pip and other conda dependencies.
-        """
-        activate_cmd = fr"{self.clean_dest_path}\condabin\activate"
-        output = subprocess.check_output(activate_cmd.split(), shell=True)
-        print(output.decode("utf8"))
-        
     def install_pip(
         self,
         dependencies: Optional[List[str]] = None,
@@ -178,13 +169,11 @@ class MinicondaInstaller:
 
         Dependencies can be specified in a list of package names or a dependencies file.
         """
-        if config["system"] == "Windows":
-            self._activate_conda_windows()
         if dependencies:
             for dep in dependencies:
                 # This will give output earlier when installed individually.
                 if config["system"] == "Windows":
-                    install_cmd = f"pip install {dep}"
+                    install_cmd = fr"{self.clean_dest_path}\condabin\activate && pip install {dep}"
                     output = subprocess.check_output(install_cmd.split(), shell=True)
                 else:
                     install_cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
@@ -195,7 +184,7 @@ class MinicondaInstaller:
                 print(output.decode("utf8"))
         if dependencies_path:
             if config["system"] == "Windows":
-                install_cmd = f"pip install -r {dependencies_path}"
+                install_cmd = fr"{self.clean_dest_path}\condabin\activate && pip install -r {dependencies_path}"
                 output = subprocess.check_output(install_cmd.split(), shell=True)
             else:
                 install_cmd = f"{self.clean_dest_path}/bin/pip install -r {dependencies_path}"
@@ -281,6 +270,7 @@ def main():
     p.add_argument(
         "--pip-dependencies",
         metavar="LIST",
+        default="",
         help="Comma-separated list of pip requirements.",
     )
     p.add_argument(
@@ -291,6 +281,7 @@ def main():
     p.add_argument(
         "--conda-dependencies",
         metavar="LIST",
+        default="",
         help="Comma-separated list of conda requirements.",
     )
     p.add_argument(
@@ -324,7 +315,7 @@ def main():
         inst.install_miniconda(verbose=args.verbose)
         if args.pip_dependencies or args.pip_dependencies_path:
             inst.install_pip(
-                dependencies=args.pip_dependencies.split(","),
+                dependencies=args.pip_dependencies.split(",") if args.pip_dependencies else None,
                 dependencies_path=args.pip_dependencies_path,
                 verbose=args.verbose,
             )
@@ -334,7 +325,7 @@ def main():
             or args.conda_environment_path
         ):
             inst.install_conda(
-                dependencies=args.conda_dependencies.split(","),
+                dependencies=args.conda_dependencies.split(",") if args.conda_dependencies else None,
                 dependencies_path=args.conda_dependencies_path,
                 environment_path=args.conda_environment_path,
                 verbose=args.verbose,
