@@ -4,20 +4,21 @@
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
 This will download a Miniconda binary from https://repo.continuum.io/miniconda/
-like https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh,
-unpack and install it locally. For Windows downloads Miniconda Binary from
-https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe,
+like https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh for
+MacOS or https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe
+for Windows, and unpack and install it locally.
+
 This is tested on MacOS, Linux and Windows.
 
 For additional information please read the README! ;)
 """
 
+import os
 import sys
 import pathlib
 import platform
 import argparse
 import subprocess
-import os
 from urllib import request
 from typing import Optional, List
 
@@ -60,12 +61,12 @@ class MinicondaInstaller:
 
     This is mainly meant to install a fresh Miniconda distribution. To add
     some convenience it also allows to provision the installation with some
-    specified packages to be installed via pip or conda.
+    specified packages to be installed via ``pip`` or ``conda``.
 
     N.B.:
 
-    - Dependencies specified via conda environment files will not be available
-      together with dependencies specified separately via pip!
+    - Dependencies specified via ``conda`` environment files will not be
+      available together with dependencies specified separately via ``pip``!
     """
 
     def __init__(self, dest_path: str, verbose: bool = False):
@@ -127,7 +128,8 @@ class MinicondaInstaller:
                 print(f"Copying to {mc_blob_path} ...")
             mc_blob_path.write_bytes(mc_blob)
             self.log(f"mv {config['mc_blob_name']} {mc_blob_path}")
-        if not ((self.clean_dest_path / "bin" / "conda").exists() or (self.clean_dest_path / "condabin" / "conda.bat").exists()):
+        if not ((self.clean_dest_path / "bin" / "conda").exists() or \
+                (self.clean_dest_path / "condabin" / "conda.bat").exists()):
             if config["system"] == "Windows":
                 exec_cmd = f'start /wait "" {mc_blob_path} /InstallationType=JustMe /RegisterPython=0 /S /D={self.clean_dest_path}'
                 with open("temp.bat", "w") as fh:
