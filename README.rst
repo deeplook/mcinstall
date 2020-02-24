@@ -13,9 +13,17 @@ This script has no external dependencies, but expects to be run with Python 3.
 Installation
 ------------
 
-For now you can install and uninstall this like the following::
+For now you can install and uninstall this like the following without cloning
+the repo::
 
      pip3 install -e git+https://github.com/deeplook/mcinstall#egg=mcinstall
+     pip3 uninstall mcinstall
+
+If you clone the repo locally you can also install and uninstall like this::
+
+     git clone https://github.com/deeplook/mcinstall.git
+     cd mcinstall
+     pip3 install -e .
      pip3 uninstall mcinstall
 
 Sample Usage
