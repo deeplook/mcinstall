@@ -10,9 +10,20 @@ some initial Windows support.
 
 This script has no external dependencies, but expects to be run with Python 3.
 
+Installation
+------------
+
+For now you can install and uninstall this like the following::
+
+     pip3 install -e git+https://github.com/deeplook/mcinstall#egg=mcinstall
+     pip3 uninstall mcinstall
+
+Sample Usage
+------------
+
 If you run it like this::
 
-    python3 mcinstall.py ~/Downloads/mc3
+    mcinstall ~/Downloads/mc3
 
 it will run a command like this on macOS (using some defaults and decent
 system introspection)::
@@ -25,7 +36,7 @@ This can be used then with a command like this::
 
 Suggested test::
 
-    python3 mcinstall.py --verbose --pip-dependencies jupyter,torch ~/Downloads/torchy
+    mcinstall --verbose --pip-dependencies jupyter,torch ~/Downloads/torchy
     source ~/Downloads/torchy/bin/activate
     python -c "import torch; print('ok')"
 
@@ -45,7 +56,7 @@ Suggested test dependencies files::
 
 Sample run (replaced home directory with ``~`` manually)::
 
-    $ python3 mcinstall.py --verbose --pip-dependencies jupyter,torch ~/Downloads/torchy
+    $ mcinstall --verbose --pip-dependencies jupyter,torch ~/Downloads/torchy
     Making directory ~/Downloads/torchy.
     Downloading https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh ...
     Copying to ~/Downloads/Miniconda3-latest-MacOSX-x86_64.sh ...
