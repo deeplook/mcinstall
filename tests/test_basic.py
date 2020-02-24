@@ -20,17 +20,17 @@ def test_uname_m():
     print(out.decode("utf-8"))
 
 
-def test_pip_sklearn():
+def test_pip_geopy():
     verbose = True
     with tempfile.TemporaryDirectory() as tempdir:
         mci = MinicondaInstaller(tempdir, verbose=verbose)
         mci.download()
         mci.install_miniconda()
-        mci.install_pip(dependencies=["scikit-learn"])
+        mci.install_pip(dependencies=["geopy"])
 
         sys.path.insert(0, f"{tempdir}/lib/python3.7/site-packages")
-        import sklearn
-        print(f"Sklearn location: {sklearn.__file__}")
-        print(f"Sklearn version: {sklearn.__version__}")
+        # import geopy
+        # print(f"Geopy location: {geopy.__file__}")
+        # print(f"Geopy version: {geopy.__version__}")
 
     assert not os.path.exists(tempdir)
