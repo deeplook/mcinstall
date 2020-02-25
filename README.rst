@@ -3,7 +3,7 @@ mcinstall
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
-This will download a Miniconda binary based on your operating system from https://repo.continuum.io/miniconda/
+This will download a Miniconda binary based on your operating system
 for `MacOS <https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh>`_,
 `Linux <https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh>`_ and `Windows <https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe>`_
 then unpack binary and install it locally. It was tested on macOS and Linux ok, and has
@@ -47,7 +47,7 @@ Windows Example:
 
 On Windows if you run like this::
 
-    python3 mcinstall.py %USERPROFILE%\downloads\mc3
+    mcinstall %USERPROFILE%\downloads\mc3
 
 it will run a command like this::
 
