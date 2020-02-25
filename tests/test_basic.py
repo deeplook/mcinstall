@@ -28,9 +28,8 @@ def test_pip():
         mci.download()
         mci.install_miniconda()
         mci.install_pip(dependencies=["geopy"])
-        # mci.install_conda(dependencies=["numpy"])
 
-        # Run Miniconda's Python  and import the installed dependencies.
+        # Run Miniconda's Python  and import the installed dependency.
         cmd = [
             f"{tempdir}/bin/python", "-c",
             "import geopy; print('Imported geopy ' + geopy.__version__)"
@@ -43,20 +42,17 @@ def test_pip():
 
 def test_conda():
     verbose = True
-    # tempdir = tempfile.TemporaryDirectory().name
     with tempfile.TemporaryDirectory() as tempdir:
         mci = MinicondaInstaller(tempdir, verbose=verbose)
         mci.download()
         mci.install_miniconda()
-        # mci.install_pip(dependencies=["geopy"])
         mci.install_conda(channel="conda-forge", dependencies=["numpy"])
 
-        # Run Miniconda's Python  and import the installed dependencies.
+        # Run Miniconda's Python  and import the installed dependency.
         cmd = [
             f"{tempdir}/bin/python", "-c",
             "import numpy; print('Imported numpy '+numpy.__version__)"
         ]
-        print(" ".join(cmd))
         out = subprocess.check_output(cmd).decode("utf-8").strip()
         print(out)
 
