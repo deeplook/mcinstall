@@ -3,10 +3,10 @@
 """
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
-This will download a Miniconda binary from https://repo.continuum.io/miniconda/
+This downloads a Miniconda binary e.g. from https://repo.continuum.io/miniconda/
 like https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh for
 MacOS or https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe
-for Windows, and unpack and install it locally.
+for Windows, and unpacks and installs it locally.
 
 This is tested on MacOS, Linux and Windows.
 
@@ -14,6 +14,7 @@ For additional information please read the README! ;)
 """
 
 import os
+import re
 import sys
 import pathlib
 import platform
@@ -50,6 +51,14 @@ if config["system"] in known_systems:
     else:
         ext = "sh"
 
+    if re.match("armv[67]l", config["machine"]):
+        config["mc_base_url"] = (
+            "https://github.com/jjhelmus/berryconda"
+            "/releases/download/v2.0.0/"
+        )
+        config["mc_name"] = "Berryconda3"
+        config["mc_version"] = "2.0.0"
+
     config["mc_blob_name"] = (
         f"{config['mc_name']}-{config['mc_version']}-"
         f"{config['system']}-{config['machine']}.{ext}"
@@ -59,9 +68,9 @@ if config["system"] in known_systems:
 class MinicondaInstaller:
     """A tiny installer to bring you up to Python/Pip/Conda speed in seconds.
 
-    This is mainly meant to install a fresh Miniconda distribution. To add
-    some convenience it also allows to provision the installation with some
-    specified packages to be installed via ``pip`` or ``conda``.
+    This is mainly meant to install a fresh Miniconda distribution. It also
+    allows to provision the installed base environment with additional packages
+    via ``pip`` or ``conda``.
 
     N.B.:
 
@@ -87,17 +96,14 @@ class MinicondaInstaller:
             print(f'Run this to start using your fresh Miniconda: "{cmd}".')
 
     def log(self, command: str):
-        """
-        Logger method to log results to ``log_path`` from ``config``.
-        :param command:
+        """Logger method to log results to ``log_path`` from ``config``.
         """
         log_path = pathlib.Path(config['log_path']).expanduser().absolute()
         with log_path.open("a") as f:
             f.write(f"{command}\n")
 
     def download(self, verbose: bool = False):
-        """
-        Download Miniconda locally at desired destination.
+        """Download Miniconda locally at desired destination.
         """
         if not self.clean_dest_path.exists():
             if verbose:
@@ -110,8 +116,7 @@ class MinicondaInstaller:
             self.download_path.mkdir()
 
     def install_miniconda(self, verbose: bool = False):
-        """
-        Install Miniconda locally at desired destination.
+        """Install Miniconda locally at desired destination.
         """
         mc_blob_path = self.download_path / config["mc_blob_name"]
         if not mc_blob_path.exists():
@@ -166,8 +171,7 @@ class MinicondaInstaller:
         dependencies_path: Optional[str] = None,
         verbose: bool = False,
     ):
-        """
-        Pip-install dependencies.
+        """Pip-install dependencies.
 
         Dependencies can be specified in a list of package names or a dependencies file.
         """
@@ -204,8 +208,7 @@ class MinicondaInstaller:
         environment_path: Optional[str] = None,
         verbose: bool = False,
     ):
-        """
-        Conda-install dependencies.
+        """Conda-install dependencies.
 
         Dependencies can be specified in a list of package names or a dependencies file
         or a conda environment file (which will create a new environment).
