@@ -29,16 +29,12 @@ def test_pip_geopy():
         mci.install_miniconda()
         mci.install_pip(dependencies=["geopy"])
 
-        # Find Python version used by the installed Miniconda, and
-        # add it to the search path:
-        cmd = [f"{tempdir}/bin/python", "--version"]
+        # Run Miniconda's Python  and import the installed dependency.
+        cmd = [
+            f"{tempdir}/bin/python", "-c",
+            "import geopy; print('Imported geopy ' + geopy.__version__)"
+        ]
         out = subprocess.check_output(cmd).decode("utf-8").strip()
-        py_version = re.search(r"Python\s+(\d+\.\d+)", out).group()
-        sys.path.insert(0, f"{tempdir}/lib/{py_version}/site-packages")
-
-        # Import the installed test package.
-        import geopy
-        print(f"Geopy location: {geopy.__file__}")
-        print(f"Geopy version: {geopy.__version__}")
+        print(out)
 
     assert not os.path.exists(tempdir)
