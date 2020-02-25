@@ -13,15 +13,15 @@ This is tested on MacOS, Linux and Windows.
 For additional information please read the README! ;)
 """
 
-import os
-import re
-import sys
+import argparse
 import pathlib
 import platform
-import argparse
+import os
+import re
 import subprocess
-from urllib import request
+import sys
 from typing import Optional, List
+from urllib import request
 
 
 __version__ = '0.2.4'
@@ -42,6 +42,7 @@ config = dict(
 # derived config data
 if config["system"] == "Darwin":
     config["system"] = "MacOSX"
+
 known_systems = ["MacOSX", "Linux", "Windows"]
 
 if config["system"] in known_systems:
@@ -136,7 +137,10 @@ class MinicondaInstaller:
         if not ((self.clean_dest_path / "bin" / "conda").exists() or \
                 (self.clean_dest_path / "condabin" / "conda.bat").exists()):
             if config["system"] == "Windows":
-                exec_cmd = f'start /wait "" {mc_blob_path} /InstallationType=JustMe /RegisterPython=0 /S /D={self.clean_dest_path}'
+                exec_cmd = (
+                    f'start /wait "" {mc_blob_path} /InstallationType=JustMe '
+                    f'/RegisterPython=0 /S /D={self.clean_dest_path}'
+                )
                 with open("temp.bat", "w") as fh:
                     fh.write(exec_cmd)
                 p = subprocess.Popen("temp.bat", stdout=subprocess.PIPE)
@@ -173,31 +177,43 @@ class MinicondaInstaller:
     ):
         """Pip-install dependencies.
 
-        Dependencies can be specified in a list of package names or a dependencies file.
+        Dependencies can be specified in a list of package names or
+        a dependencies file.
         """
         if dependencies:
             for dep in dependencies:
                 # This will give output earlier when installed individually.
                 if config["system"] == "Windows":
-                    install_cmd = fr"{self.clean_dest_path}\condabin\activate && pip install {dep}"
-                    output = subprocess.check_output(install_cmd.split(), shell=True)
+                    cmd = (
+                        fr"{self.clean_dest_path}\condabin\activate && "
+                        f"pip install {dep}"
+                    )
+                    output = subprocess.check_output(
+                        cmd.split(), shell=True)
                 else:
-                    install_cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
-                    output = subprocess.check_output(install_cmd.split())
+                    cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
+                    output = subprocess.check_output(cmd.split())
                 if verbose:
-                    print(f"Running command: {install_cmd}")
-                self.log(install_cmd)
+                    print(f"Running command: {cmd}")
+                self.log(cmd)
                 print(output.decode("utf8"))
+
         if dependencies_path:
             if config["system"] == "Windows":
-                install_cmd = fr"{self.clean_dest_path}\condabin\activate && pip install -r {dependencies_path}"
-                output = subprocess.check_output(install_cmd.split(), shell=True)
+                cmd = (
+                    fr"{self.clean_dest_path}\condabin\activate && "
+                    f"pip install -r {dependencies_path}"
+                )
+                output = subprocess.check_output(cmd.split(), shell=True)
             else:
-                install_cmd = f"{self.clean_dest_path}/bin/pip install -r {dependencies_path}"
-                output = subprocess.check_output(install_cmd.split())
+                cmd = (
+                    f"{self.clean_dest_path}/bin/pip install "
+                    f"-r {dependencies_path}"
+                )
+                output = subprocess.check_output(cmd.split())
             if verbose:
-                print(f"Running command: {install_cmd}")
-            self.log(install_cmd)
+                print(f"Running command: {cmd}")
+            self.log(cmd)
             print(output.decode("utf8"))
 
     def install_conda(
@@ -210,51 +226,64 @@ class MinicondaInstaller:
     ):
         """Conda-install dependencies.
 
-        Dependencies can be specified in a list of package names or a dependencies file
-        or a conda environment file (which will create a new environment).
+        Dependencies can be specified in a list of package names or
+        a dependencies file or a conda environment file (which will
+        create a new environment).
         """
         if dependencies:
             for dep in dependencies:
                 # This will give output earlier when installed individually.
                 if config["system"] == "Windows":
-                    install_cmd = fr"{self.clean_dest_path}\condabin\conda install -y {dep}"
-                    output = subprocess.check_output(install_cmd.split(), shell=True)
+                    cmd = (
+                        fr"{self.clean_dest_path}\condabin\conda install "
+                        f"-y {dep}"
+                    )
+                    output = subprocess.check_output(cmd.split(), shell=True)
                 else:
-                    install_cmd = f"{self.clean_dest_path}/bin/conda install -y -c {channel} {dep}"
-                    output = subprocess.check_output(install_cmd.split())
+                    cmd = (
+                        f"{self.clean_dest_path}/bin/conda install -y "
+                        f"-c {channel} {dep}"
+                    )
+                    output = subprocess.check_output(cmd.split())
                 if verbose:
-                    print(f"Running command: {install_cmd}")
-                self.log(install_cmd)
+                    print(f"Running command: {cmd}")
+                self.log(cmd)
                 print(output.decode("utf8"))
+
         if dependencies_path:
             if config["system"] == "Windows":
-                install_cmd = (
-                    fr"{self.clean_dest_path}\condabin\conda install -y --file {dependencies_path}"
+                cmd = (
+                    fr"{self.clean_dest_path}\condabin\conda install -y "
+                    f"--file {dependencies_path}"
                 )
-                output = subprocess.check_output(install_cmd.split(), shell=True)
+                output = subprocess.check_output(cmd.split(), shell=True)
             else:
-                install_cmd = (
-                    f"{self.clean_dest_path}/bin/conda install -y --file {dependencies_path}"
+                cmd = (
+                    f"{self.clean_dest_path}/bin/conda install -y "
+                    f"--file {dependencies_path}"
                 )
-                output = subprocess.check_output(install_cmd.split())
+                output = subprocess.check_output(cmd.split())
             if verbose:
-                print(f"Running command: {install_cmd}")
-            self.log(install_cmd)
+                print(f"Running command: {cmd}")
+            self.log(cmd)
             print(output.decode("utf8"))
+
         if environment_path:
             if config["system"] == "Windows":
-                install_cmd = (
-                   fr"{self.clean_dest_path}\condabin\conda env create --file {environment_path}"
+                cmd = (
+                   fr"{self.clean_dest_path}\condabin\conda env create "
+                   f"--file {environment_path}"
                 )
-                output = subprocess.check_output(install_cmd.split(), shell=True)
+                output = subprocess.check_output(cmd.split(), shell=True)
             else:
-                install_cmd = (
-                   f"{self.clean_dest_path}/bin/conda env create --file {environment_path}"
+                cmd = (
+                   f"{self.clean_dest_path}/bin/conda env create "
+                   f"--file {environment_path}"
                 )
-                output = subprocess.check_output(install_cmd.split())
+                output = subprocess.check_output(cmd.split())
             if verbose:
-                print(f"Running command: {install_cmd}")
-            self.log(install_cmd)
+                print(f"Running command: {cmd}")
+            self.log(cmd)
             print(output.decode("utf8"))
 
 
@@ -262,7 +291,10 @@ def main():
     """Main function called when used on the command-line.
     """
     systems = ", ".join(known_systems)
-    desc = f'Quick-install a fresh Miniconda from {config["mc_base_url"]} for {systems}.'
+    desc = (
+        f'Quick-install a fresh Miniconda from {config["mc_base_url"]} '
+        f'for {systems}.'
+    )
     p = argparse.ArgumentParser(description=desc)
 
     p.add_argument(
