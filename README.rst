@@ -3,9 +3,10 @@ mcinstall
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
-This will download a Miniconda binary from https://repo.continuum.io/miniconda/
-like https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh,
-unpack and install it locally. It was tested on macOS and Linux ok, and has
+This will download a Miniconda binary based on your operating system from https://repo.continuum.io/miniconda/
+for `MacOS <https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh>`_,
+`Linux <https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh>`_ and `Windows <https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe>`_
+then unpack binary and install it locally. It was tested on macOS and Linux ok, and has
 some initial Windows support.
 
 This script has no external dependencies, but expects to be run with Python 3.
@@ -41,6 +42,20 @@ system introspection)::
 This can be used then with a command like this::
 
     source ~/Downloads/mc3/bin/activate
+
+Windows Example:
+
+On Windows if you run like this::
+
+    python3 mcinstall.py %USERPROFILE%\downloads\mc3
+
+it will run a command like this::
+
+    start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%USERPROFILE%\downloads\mc3
+
+This can be used then with command like this::
+
+    %USERPROFILE%\mc3\condabin\activate
 
 Suggested test::
 
