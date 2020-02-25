@@ -4,6 +4,7 @@ Test creating Miniconda installation and provisioning.
 
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -28,14 +29,11 @@ def test_pip_geopy():
         mci.install_miniconda()
         mci.install_pip(dependencies=["geopy"])
 
-        # Find Python version used by the installed Miniconda, and add it to the
-        # search path:
-        cmd = [
-            f"{tempdir}/bin/python", "-c",
-            '''import sys;v='.'.join(map(str,sys.version_info[:2]));print('python'+v)'''
-        ]
-        out = subprocess.check_output(cmd)
-        py_version = out.decode("utf-8").strip()
+        # Find Python version used by the installed Miniconda, and
+        # add it to the search path:
+        cmd = [f"{tempdir}/bin/python", "--version"]
+        out = subprocess.check_output(cmd).decode("utf-8").strip()
+        py_version = re.search(r"Python\s+(\d+\.\d+)", out).group()
         sys.path.insert(0, f"{tempdir}/lib/{py_version}/site-packages")
 
         # Import the installed test package.
