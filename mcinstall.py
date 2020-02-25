@@ -198,6 +198,7 @@ class MinicondaInstaller:
 
     def install_conda(
         self,
+        channel: str = "conda-forge",
         dependencies: Optional[List[str]] = None,
         dependencies_path: Optional[str] = None,
         environment_path: Optional[str] = None,
@@ -216,7 +217,7 @@ class MinicondaInstaller:
                     install_cmd = fr"{self.clean_dest_path}\condabin\conda install -y {dep}"
                     output = subprocess.check_output(install_cmd.split(), shell=True)
                 else:
-                    install_cmd = f"{self.clean_dest_path}/bin/conda install -y {dep}"
+                    install_cmd = f"{self.clean_dest_path}/bin/conda install -y -c {channel} {dep}"
                     output = subprocess.check_output(install_cmd.split())
                 if verbose:
                     print(f"Running command: {install_cmd}")

@@ -21,19 +21,42 @@ def test_uname_m():
     print(out.decode("utf-8"))
 
 
-def test_pip_geopy():
+def test_pip():
     verbose = True
     with tempfile.TemporaryDirectory() as tempdir:
         mci = MinicondaInstaller(tempdir, verbose=verbose)
         mci.download()
         mci.install_miniconda()
         mci.install_pip(dependencies=["geopy"])
+        # mci.install_conda(dependencies=["numpy"])
 
-        # Run Miniconda's Python  and import the installed dependency.
+        # Run Miniconda's Python  and import the installed dependencies.
         cmd = [
             f"{tempdir}/bin/python", "-c",
             "import geopy; print('Imported geopy ' + geopy.__version__)"
         ]
+        out = subprocess.check_output(cmd).decode("utf-8").strip()
+        print(out)
+
+    assert not os.path.exists(tempdir)
+
+
+def test_conda():
+    verbose = True
+    # tempdir = tempfile.TemporaryDirectory().name
+    with tempfile.TemporaryDirectory() as tempdir:
+        mci = MinicondaInstaller(tempdir, verbose=verbose)
+        mci.download()
+        mci.install_miniconda()
+        # mci.install_pip(dependencies=["geopy"])
+        mci.install_conda(channel="conda-forge", dependencies=["numpy"])
+
+        # Run Miniconda's Python  and import the installed dependencies.
+        cmd = [
+            f"{tempdir}/bin/python", "-c",
+            "import numpy; print('Imported numpy '+numpy.__version__)"
+        ]
+        print(" ".join(cmd))
         out = subprocess.check_output(cmd).decode("utf-8").strip()
         print(out)
 
