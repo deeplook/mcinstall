@@ -36,11 +36,12 @@ def test_install_dependencies():
             cmd = [
                 f"{tempdir}/bin/python", "-c",
                 f"import {pkg_name}; "
-                f"print('{pkg_name} {pkg_name}.__version__ ok')"
+                f"print(f'{pkg_name} {{{pkg_name}.__version__}} ok')"
             ]
             out = subprocess.check_output(cmd).decode("utf-8").strip()
             print(out)
             assert re.match(f"{pkg_name} .+ ok", out)
 
+    print()
     assert not os.path.exists(tempdir)
 
