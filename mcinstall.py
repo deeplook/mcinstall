@@ -337,14 +337,13 @@ def main():
 
     if args.path:
         inst = MinicondaInstaller(dest_path=args.path, verbose=args.verbose)
-        inst.download(verbose=args.verbose)
-        inst.install_miniconda(verbose=args.verbose)
+        inst.download()
+        inst.install_miniconda()
         if args.pip_dependencies or args.pip_dependencies_path:
             inst.install_pip(
                 dependencies=args.pip_dependencies.split(",") \
                     if args.pip_dependencies else None,
                 dependencies_path=args.pip_dependencies_path,
-                verbose=args.verbose,
             )
         if (
             args.conda_dependencies
@@ -356,7 +355,6 @@ def main():
                     if args.conda_dependencies else None,
                 dependencies_path=args.conda_dependencies_path,
                 environment_path=args.conda_environment_path,
-                verbose=args.verbose,
             )
 
 
