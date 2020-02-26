@@ -14,9 +14,9 @@ For additional information please read the README! ;)
 """
 
 import argparse
+import os
 import pathlib
 import platform
-import os
 import re
 import subprocess
 import sys
@@ -103,26 +103,26 @@ class MinicondaInstaller:
         with log_path.open("a") as f:
             f.write(f"{command}\n")
 
-    def download(self, verbose: bool = False):
+    def download(self):
         """Download Miniconda locally at desired destination.
         """
         if not self.clean_dest_path.exists():
-            if verbose:
+            if self.verbose:
                 print(f"Making directory {self.clean_dest_path}.")
             self.clean_dest_path.mkdir(parents=True)
 
         if not self.download_path.exists():
-            if verbose:
+            if self.verbose:
                 print(f"Making directory {self.download_path}.")
             self.download_path.mkdir()
 
-    def install_miniconda(self, verbose: bool = False):
+    def install_miniconda(self):
         """Install Miniconda locally at desired destination.
         """
         mc_blob_path = self.download_path / config["mc_blob_name"]
         if not mc_blob_path.exists():
             url = f"{config['mc_base_url']}{config['mc_blob_name']}"
-            if verbose:
+            if self.verbose:
                 print(f"Downloading {url} ...")
             resp = request.urlopen(url)
             self.log(f'wget {url}')
@@ -130,10 +130,11 @@ class MinicondaInstaller:
                 msg = f"Cannot download {url}. Verify URL components!"
                 raise ValueError(msg)
             mc_blob = resp.read()
-            if verbose:
+            if self.verbose:
                 print(f"Copying to {mc_blob_path} ...")
             mc_blob_path.write_bytes(mc_blob)
             self.log(f"mv {config['mc_blob_name']} {mc_blob_path}")
+
         if not ((self.clean_dest_path / "bin" / "conda").exists() or \
                 (self.clean_dest_path / "condabin" / "conda.bat").exists()):
             if config["system"] == "Windows":
@@ -152,10 +153,9 @@ class MinicondaInstaller:
                     raise ValueError("Installation failed...")
                 else:
                     os.remove("temp.bat")
-     
             else:
                 exec_cmd = f"bash {mc_blob_path} -b -f -p {self.clean_dest_path}"
-                if verbose:
+                if self.verbose:
                      print(f"Running command: {exec_cmd}")
                 output = subprocess.check_output(exec_cmd.split())
                 print(output.decode("utf8"))
@@ -173,7 +173,6 @@ class MinicondaInstaller:
         self,
         dependencies: Optional[List[str]] = None,
         dependencies_path: Optional[str] = None,
-        verbose: bool = False,
     ):
         """Pip-install dependencies.
 
@@ -193,7 +192,7 @@ class MinicondaInstaller:
                 else:
                     cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
                     output = subprocess.check_output(cmd.split())
-                if verbose:
+                if self.verbose:
                     print(f"Running command: {cmd}")
                 self.log(cmd)
                 print(output.decode("utf8"))
@@ -211,7 +210,7 @@ class MinicondaInstaller:
                     f"-r {dependencies_path}"
                 )
                 output = subprocess.check_output(cmd.split())
-            if verbose:
+            if self.verbose:
                 print(f"Running command: {cmd}")
             self.log(cmd)
             print(output.decode("utf8"))
@@ -222,7 +221,6 @@ class MinicondaInstaller:
         dependencies: Optional[List[str]] = None,
         dependencies_path: Optional[str] = None,
         environment_path: Optional[str] = None,
-        verbose: bool = False,
     ):
         """Conda-install dependencies.
 
@@ -245,7 +243,7 @@ class MinicondaInstaller:
                         f"-c {channel} {dep}"
                     )
                     output = subprocess.check_output(cmd.split())
-                if verbose:
+                if self.verbose:
                     print(f"Running command: {cmd}")
                 self.log(cmd)
                 print(output.decode("utf8"))
@@ -263,7 +261,7 @@ class MinicondaInstaller:
                     f"--file {dependencies_path}"
                 )
                 output = subprocess.check_output(cmd.split())
-            if verbose:
+            if self.verbose:
                 print(f"Running command: {cmd}")
             self.log(cmd)
             print(output.decode("utf8"))
@@ -281,7 +279,7 @@ class MinicondaInstaller:
                    f"--file {environment_path}"
                 )
                 output = subprocess.check_output(cmd.split())
-            if verbose:
+            if self.verbose:
                 print(f"Running command: {cmd}")
             self.log(cmd)
             print(output.decode("utf8"))
@@ -353,7 +351,8 @@ def main():
         inst.install_miniconda(verbose=args.verbose)
         if args.pip_dependencies or args.pip_dependencies_path:
             inst.install_pip(
-                dependencies=args.pip_dependencies.split(",") if args.pip_dependencies else None,
+                dependencies=args.pip_dependencies.split(",") \
+                    if args.pip_dependencies else None,
                 dependencies_path=args.pip_dependencies_path,
                 verbose=args.verbose,
             )
@@ -363,7 +362,8 @@ def main():
             or args.conda_environment_path
         ):
             inst.install_conda(
-                dependencies=args.conda_dependencies.split(",") if args.conda_dependencies else None,
+                dependencies=args.conda_dependencies.split(",") \
+                    if args.conda_dependencies else None,
                 dependencies_path=args.conda_dependencies_path,
                 environment_path=args.conda_environment_path,
                 verbose=args.verbose,
