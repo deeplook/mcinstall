@@ -15,11 +15,11 @@ For additional information please read the README! ;)
 
 import argparse
 import os
-import pathlib
 import platform
 import re
-import subprocess
 import sys
+from pathlib import Path
+from subprocess import check_output, Popen, PIPE
 from typing import Optional, List
 from urllib import request
 
@@ -83,9 +83,9 @@ class MinicondaInstaller:
         self.dest_path = dest_path
         self.verbose = verbose
         self.installed_ok = False
-        self.clean_dest_path = pathlib.Path(dest_path).expanduser().absolute()
+        self.clean_dest_path = Path(dest_path).expanduser().absolute()
         self.download_path = (
-            pathlib.Path(config["downloads_dir"]).expanduser().absolute()
+            Path(config["downloads_dir"]).expanduser().absolute()
         )
 
     def __del__(self):
@@ -99,7 +99,7 @@ class MinicondaInstaller:
     def log(self, command: str):
         """Logger method to log results to ``log_path`` from ``config``.
         """
-        log_path = pathlib.Path(config['log_path']).expanduser().absolute()
+        log_path = Path(config['log_path']).expanduser().absolute()
         with log_path.open("a") as f:
             f.write(f"{command}\n")
 
@@ -138,13 +138,13 @@ class MinicondaInstaller:
         if not ((self.clean_dest_path / "bin" / "conda").exists() or \
                 (self.clean_dest_path / "condabin" / "conda.bat").exists()):
             if config["system"] == "Windows":
-                exec_cmd = (
+                cmd = (
                     f'start /wait "" {mc_blob_path} /InstallationType=JustMe '
                     f'/RegisterPython=0 /S /D={self.clean_dest_path}'
                 )
                 with open("temp.bat", "w") as fh:
-                    fh.write(exec_cmd)
-                p = subprocess.Popen("temp.bat", stdout=subprocess.PIPE)
+                    fh.write(cmd)
+                p = Popen("temp.bat", stdout=PIPE)
                 stdout, stderr = p.communicate()
                 print(p.returncode)
                 if p.returncode != 0:
@@ -154,18 +154,18 @@ class MinicondaInstaller:
                 else:
                     os.remove("temp.bat")
             else:
-                exec_cmd = f"bash {mc_blob_path} -b -f -p {self.clean_dest_path}"
+                cmd = f"bash {mc_blob_path} -b -f -p {self.clean_dest_path}"
                 if self.verbose:
-                     print(f"Running command: {exec_cmd}")
-                output = subprocess.check_output(exec_cmd.split())
+                     print(f"Running command: {cmd}")
+                output = check_output(cmd.split())
                 print(output.decode("utf8"))
-            self.log(exec_cmd)
+            self.log(cmd)
 
         if config["system"] == "Windows":
-            source_cmd = fr"{self.clean_dest_path}\condabin\activate"
+            cmd = fr"{self.clean_dest_path}\condabin\activate"
         else:
-            source_cmd = f"source {self.clean_dest_path}/bin/activate"
-        self.log(source_cmd)
+            cmd = f"source {self.clean_dest_path}/bin/activate"
+        self.log(cmd)
 
         self.installed_ok = True
         
@@ -187,11 +187,11 @@ class MinicondaInstaller:
                         fr"{self.clean_dest_path}\condabin\activate && "
                         f"pip install {dep}"
                     )
-                    output = subprocess.check_output(
+                    output = check_output(
                         cmd.split(), shell=True)
                 else:
                     cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
-                    output = subprocess.check_output(cmd.split())
+                    output = check_output(cmd.split())
                 if self.verbose:
                     print(f"Running command: {cmd}")
                 self.log(cmd)
@@ -203,13 +203,13 @@ class MinicondaInstaller:
                     fr"{self.clean_dest_path}\condabin\activate && "
                     f"pip install -r {dependencies_path}"
                 )
-                output = subprocess.check_output(cmd.split(), shell=True)
+                output = check_output(cmd.split(), shell=True)
             else:
                 cmd = (
                     f"{self.clean_dest_path}/bin/pip install "
                     f"-r {dependencies_path}"
                 )
-                output = subprocess.check_output(cmd.split())
+                output = check_output(cmd.split())
             if self.verbose:
                 print(f"Running command: {cmd}")
             self.log(cmd)
@@ -236,13 +236,13 @@ class MinicondaInstaller:
                         fr"{self.clean_dest_path}\condabin\conda install "
                         f"-y {dep}"
                     )
-                    output = subprocess.check_output(cmd.split(), shell=True)
+                    output = check_output(cmd.split(), shell=True)
                 else:
                     cmd = (
                         f"{self.clean_dest_path}/bin/conda install -y "
                         f"-c {channel} {dep}"
                     )
-                    output = subprocess.check_output(cmd.split())
+                    output = check_output(cmd.split())
                 if self.verbose:
                     print(f"Running command: {cmd}")
                 self.log(cmd)
@@ -254,13 +254,13 @@ class MinicondaInstaller:
                     fr"{self.clean_dest_path}\condabin\conda install -y "
                     f"--file {dependencies_path}"
                 )
-                output = subprocess.check_output(cmd.split(), shell=True)
+                output = check_output(cmd.split(), shell=True)
             else:
                 cmd = (
                     f"{self.clean_dest_path}/bin/conda install -y "
                     f"--file {dependencies_path}"
                 )
-                output = subprocess.check_output(cmd.split())
+                output = check_output(cmd.split())
             if self.verbose:
                 print(f"Running command: {cmd}")
             self.log(cmd)
@@ -272,13 +272,13 @@ class MinicondaInstaller:
                    fr"{self.clean_dest_path}\condabin\conda env create "
                    f"--file {environment_path}"
                 )
-                output = subprocess.check_output(cmd.split(), shell=True)
+                output = check_output(cmd.split(), shell=True)
             else:
                 cmd = (
                    f"{self.clean_dest_path}/bin/conda env create "
                    f"--file {environment_path}"
                 )
-                output = subprocess.check_output(cmd.split())
+                output = check_output(cmd.split())
             if self.verbose:
                 print(f"Running command: {cmd}")
             self.log(cmd)
