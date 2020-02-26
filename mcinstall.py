@@ -119,6 +119,7 @@ class MinicondaInstaller:
     def install_miniconda(self):
         """Install Miniconda locally at desired destination.
         """
+        dest_path = self.clean_dest_path
         mc_blob_path = self.download_path / config["mc_blob_name"]
         if not mc_blob_path.exists():
             url = f"{config['mc_base_url']}{config['mc_blob_name']}"
@@ -135,12 +136,12 @@ class MinicondaInstaller:
             mc_blob_path.write_bytes(mc_blob)
             self.log(f"mv {config['mc_blob_name']} {mc_blob_path}")
 
-        if not ((self.clean_dest_path / "bin" / "conda").exists() or \
-                (self.clean_dest_path / "condabin" / "conda.bat").exists()):
+        if not ((dest_path / "bin" / "conda").exists() or \
+                (dest_path / "condabin" / "conda.bat").exists()):
             if config["system"] == "Windows":
                 cmd = (
                     f'start /wait "" {mc_blob_path} /InstallationType=JustMe '
-                    f'/RegisterPython=0 /S /D={self.clean_dest_path}'
+                    f'/RegisterPython=0 /S /D={dest_path}'
                 )
                 with open("temp.bat", "w") as fh:
                     fh.write(cmd)
@@ -154,7 +155,7 @@ class MinicondaInstaller:
                 else:
                     os.remove("temp.bat")
             else:
-                cmd = f"bash {mc_blob_path} -b -f -p {self.clean_dest_path}"
+                cmd = f"bash {mc_blob_path} -b -f -p {dest_path}"
                 if self.verbose:
                      print(f"Running command: {cmd}")
                 output = check_output(cmd.split())
@@ -162,9 +163,9 @@ class MinicondaInstaller:
             self.log(cmd)
 
         if config["system"] == "Windows":
-            cmd = fr"{self.clean_dest_path}\condabin\activate"
+            cmd = fr"{dest_path}\condabin\activate"
         else:
-            cmd = f"source {self.clean_dest_path}/bin/activate"
+            cmd = f"source {dest_path}/bin/activate"
         self.log(cmd)
 
         self.installed_ok = True
@@ -179,36 +180,34 @@ class MinicondaInstaller:
         Dependencies can be specified in a list of package names or
         a dependencies file.
         """
-        if dependencies:
-            for dep in dependencies:
-                # This will give output earlier when installed individually.
-                if config["system"] == "Windows":
-                    cmd = (
-                        fr"{self.clean_dest_path}\condabin\activate && "
-                        f"pip install {dep}"
-                    )
-                    output = check_output(
-                        cmd.split(), shell=True)
-                else:
-                    cmd = f"{self.clean_dest_path}/bin/pip install {dep}"
-                    output = check_output(cmd.split())
-                if self.verbose:
-                    print(f"Running command: {cmd}")
-                self.log(cmd)
-                print(output.decode("utf8"))
+        dep_path = dependencies_path
+        dest_path = self.clean_dest_path
+
+        for dep in dependencies or []:
+            # This will give output earlier when installed individually.
+            if config["system"] == "Windows":
+                cmd = (
+                    fr"{dest_path}\condabin\activate && "
+                    f"pip install {dep}"
+                )
+                output = check_output(cmd.split(), shell=True)
+            else:
+                cmd = f"{dest_path}/bin/pip install {dep}"
+                output = check_output(cmd.split())
+            if self.verbose:
+                print(f"Running command: {cmd}")
+            self.log(cmd)
+            print(output.decode("utf8"))
 
         if dependencies_path:
             if config["system"] == "Windows":
                 cmd = (
-                    fr"{self.clean_dest_path}\condabin\activate && "
-                    f"pip install -r {dependencies_path}"
+                    fr"{dest_path}\condabin\activate && "
+                    f"pip install -r {dep_path}"
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = (
-                    f"{self.clean_dest_path}/bin/pip install "
-                    f"-r {dependencies_path}"
-                )
+                cmd = f"{dest_path}/bin/pip install -r {dep_path}"
                 output = check_output(cmd.split())
             if self.verbose:
                 print(f"Running command: {cmd}")
@@ -228,38 +227,32 @@ class MinicondaInstaller:
         a dependencies file or a conda environment file (which will
         create a new environment).
         """
-        if dependencies:
-            for dep in dependencies:
-                # This will give output earlier when installed individually.
-                if config["system"] == "Windows":
-                    cmd = (
-                        fr"{self.clean_dest_path}\condabin\conda install "
-                        f"-y {dep}"
-                    )
-                    output = check_output(cmd.split(), shell=True)
-                else:
-                    cmd = (
-                        f"{self.clean_dest_path}/bin/conda install -y "
-                        f"-c {channel} {dep}"
-                    )
-                    output = check_output(cmd.split())
-                if self.verbose:
-                    print(f"Running command: {cmd}")
-                self.log(cmd)
-                print(output.decode("utf8"))
+        dep_path = dependencies_path
+        env_path = environment_path
+        dest_path = self.clean_dest_path
+
+        for dep in dependencies or []:
+            # This will give output earlier when installed individually.
+            if config["system"] == "Windows":
+                cmd = fr"{dest_path}\condabin\conda install -y {dep}"
+                output = check_output(cmd.split(), shell=True)
+            else:
+                cmd = f"{dest_path}/bin/conda install -y -c {channel} {dep}"
+                output = check_output(cmd.split())
+            if self.verbose:
+                print(f"Running command: {cmd}")
+            self.log(cmd)
+            print(output.decode("utf8"))
 
         if dependencies_path:
             if config["system"] == "Windows":
                 cmd = (
-                    fr"{self.clean_dest_path}\condabin\conda install -y "
-                    f"--file {dependencies_path}"
+                    fr"{dest_path}\condabin\conda install -y "
+                    f"--file {dep_path}"
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = (
-                    f"{self.clean_dest_path}/bin/conda install -y "
-                    f"--file {dependencies_path}"
-                )
+                cmd = f"{dest_path}/bin/conda install -y --file {dep_path}"
                 output = check_output(cmd.split())
             if self.verbose:
                 print(f"Running command: {cmd}")
@@ -269,15 +262,12 @@ class MinicondaInstaller:
         if environment_path:
             if config["system"] == "Windows":
                 cmd = (
-                   fr"{self.clean_dest_path}\condabin\conda env create "
-                   f"--file {environment_path}"
+                   fr"{dest_path}\condabin\conda env create "
+                   f"--file {env_path}"
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = (
-                   f"{self.clean_dest_path}/bin/conda env create "
-                   f"--file {environment_path}"
-                )
+                cmd = "{dest_path}/bin/conda env create --file {env_path}"
                 output = check_output(cmd.split())
             if self.verbose:
                 print(f"Running command: {cmd}")
