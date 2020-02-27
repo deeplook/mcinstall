@@ -19,13 +19,12 @@ import platform
 import re
 import sys
 from pathlib import Path
-from subprocess import check_output, Popen, PIPE
-from typing import Optional, List
+from subprocess import PIPE, Popen, check_output
+from typing import List, Optional
 from urllib import request
 
-
-__version__ = '0.2.4'
-__license__ = 'MIT'
+__version__ = "0.3.0"
+__license__ = "MIT"
 
 
 # config data
@@ -48,7 +47,7 @@ known_systems = ["MacOSX", "Linux", "Windows"]
 if config["system"] in known_systems:
     if config["system"] == "Windows":
         ext = "exe"
-        config['machine'] = "x86_64"
+        config["machine"] = "x86_64"
     else:
         ext = "sh"
 
@@ -99,7 +98,7 @@ class MinicondaInstaller:
     def log(self, command: str):
         """Logger method to log results to ``log_path`` from ``config``.
         """
-        log_path = Path(config['log_path']).expanduser().absolute()
+        log_path = Path(config["log_path"]).expanduser().absolute()
         with log_path.open("a") as f:
             f.write(f"{command}\n")
 
@@ -126,7 +125,7 @@ class MinicondaInstaller:
             if self.verbose:
                 print(f"Downloading {url} ...")
             resp = request.urlopen(url)
-            self.log(f'wget {url}')
+            self.log(f"wget {url}")
             if resp.status >= 400:
                 msg = f"Cannot download {url}. Verify URL components!"
                 raise ValueError(msg)
@@ -136,12 +135,14 @@ class MinicondaInstaller:
             mc_blob_path.write_bytes(mc_blob)
             self.log(f"mv {config['mc_blob_name']} {mc_blob_path}")
 
-        if not ((dest_path / "bin" / "conda").exists() or \
-                (dest_path / "condabin" / "conda.bat").exists()):
+        if not (
+            (dest_path / "bin" / "conda").exists()
+            or (dest_path / "condabin" / "conda.bat").exists()
+        ):
             if config["system"] == "Windows":
                 cmd = (
                     f'start /wait "" {mc_blob_path} /InstallationType=JustMe '
-                    f'/RegisterPython=0 /S /D={dest_path}'
+                    f"/RegisterPython=0 /S /D={dest_path}"
                 )
                 with open("temp.bat", "w") as fh:
                     fh.write(cmd)
@@ -157,7 +158,7 @@ class MinicondaInstaller:
             else:
                 cmd = f"bash {mc_blob_path} -b -f -p {dest_path}"
                 if self.verbose:
-                     print(f"Running command: {cmd}")
+                    print(f"Running command: {cmd}")
                 output = check_output(cmd.split())
                 print(output.decode("utf8"))
             self.log(cmd)
@@ -169,7 +170,7 @@ class MinicondaInstaller:
         self.log(cmd)
 
         self.installed_ok = True
-        
+
     def install_pip(
         self,
         dependencies: Optional[List[str]] = None,
@@ -187,8 +188,7 @@ class MinicondaInstaller:
             # This will give output earlier when installed individually.
             if config["system"] == "Windows":
                 cmd = (
-                    fr"{dest_path}\condabin\activate && "
-                    f"pip install {dep}"
+                    fr"{dest_path}\condabin\activate && " f"pip install {dep}"
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
@@ -262,8 +262,8 @@ class MinicondaInstaller:
         if environment_path:
             if config["system"] == "Windows":
                 cmd = (
-                   fr"{dest_path}\condabin\conda env create "
-                   f"--file {env_path}"
+                    fr"{dest_path}\condabin\conda env create "
+                    f"--file {env_path}"
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
@@ -281,7 +281,7 @@ def main():
     systems = ", ".join(known_systems)
     desc = (
         f'Quick-install a fresh Miniconda from {config["mc_base_url"]} '
-        f'for {systems}.'
+        f"for {systems}."
     )
     p = argparse.ArgumentParser(description=desc)
 
@@ -341,8 +341,9 @@ def main():
         inst.install_miniconda()
         if args.pip_dependencies or args.pip_dependencies_path:
             inst.install_pip(
-                dependencies=args.pip_dependencies.split(",") \
-                    if args.pip_dependencies else None,
+                dependencies=args.pip_dependencies.split(",")
+                if args.pip_dependencies
+                else None,
                 dependencies_path=args.pip_dependencies_path,
             )
         if (
@@ -351,8 +352,9 @@ def main():
             or args.conda_environment_path
         ):
             inst.install_conda(
-                dependencies=args.conda_dependencies.split(",") \
-                    if args.conda_dependencies else None,
+                dependencies=args.conda_dependencies.split(",")
+                if args.conda_dependencies
+                else None,
                 dependencies_path=args.conda_dependencies_path,
                 environment_path=args.conda_environment_path,
             )
