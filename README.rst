@@ -1,8 +1,20 @@
 mcinstall
 =========
 
-.. image:: https://img.shields.io/travis/deeplook/mcinstall
-     :alt: Travis (.org)
+.. image:: http://img.shields.io/travis/deeplook/mcinstall.svg
+  :target: https://travis-ci.org/deeplook/mcinstall
+
+.. image:: https://img.shields.io/pypi/pyversions/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
+
+.. image:: https://img.shields.io/pypi/dm/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
+
+.. image:: https://img.shields.io/pypi/v/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
+
+.. image:: https://img.shields.io/pypi/l/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
