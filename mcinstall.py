@@ -279,10 +279,7 @@ def main():
     """Main function called when used on the command-line.
     """
     systems = ", ".join(known_systems)
-    desc = (
-        f'Quick-install a fresh Miniconda from {config["mc_base_url"]} '
-        f"for {systems}."
-    )
+    desc = f"Quick-install/provision a fresh Miniconda for {systems}."
     p = argparse.ArgumentParser(description=desc)
 
     p.add_argument(

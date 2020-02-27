@@ -33,18 +33,22 @@ strange...
 Installation
 ------------
 
-For now you can install and uninstall this like the following without cloning
-the repo::
+You can use ``pip`` (for Python 3) to install and uninstall this package like the
+following::
 
-     pip3 install -e git+https://github.com/deeplook/mcinstall#egg=mcinstall
-     pip3 uninstall mcinstall
+     pip install mcinstall
+     pip uninstall mcinstall
 
-If you clone the repo locally you can also install and uninstall like this::
+More recent, not yet released, versions can be installed like the following
+without cloning the repo::
+
+     pip install -e git+https://github.com/deeplook/mcinstall#egg=mcinstall
+
+Or you clone the repo locally and install the package like this::
 
      git clone https://github.com/deeplook/mcinstall.git
      cd mcinstall
-     pip3 install -e .
-     pip3 uninstall mcinstall
+     pip install -e .
 
 Sample Usage
 ------------
@@ -54,17 +58,17 @@ If you run it like this::
     mcinstall ~/Downloads/mc3
 
 it will run a command like this on macOS (using some defaults and decent
-system introspection)::
+system introspection) to create a conda base installation::
 
     bash Miniconda3-latest-MacOSX-x86_64.sh -b -f -p ~/Downloads/mc3
 
-This can be used then with a command like this::
+This can be activated then with a command like this::
 
     source ~/Downloads/mc3/bin/activate
 
 Windows Example:
 
-On Windows if you run like this::
+On Windows if you execute this command::
 
     mcinstall %USERPROFILE%\downloads\mc3
 
@@ -72,7 +76,7 @@ it will run a command like this::
 
     start /wait "" Miniconda3-latest-Windows-x86_64.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%USERPROFILE%\downloads\mc3
 
-This can be used then with command like this::
+This conda installation can be activated then with a command like this::
 
     %USERPROFILE%\mc3\condabin\activate
 
@@ -139,5 +143,4 @@ TO DO
 - same with self.download_path
 - consolidate Windows support
 - improve configuration
-- turn this into a nice package
 - make a sample screencast with asciinema
