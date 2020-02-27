@@ -1,29 +1,36 @@
 mcinstall
 =========
 
-.. image:: https://img.shields.io/travis/deeplook/mcinstall
+.. image:: https://img.shields.io/travis/deeplook/mcinstall.svg
+  :target: https://travis-ci.org/deeplook/mcinstall
      :alt: Travis (.org)
 
-.. image:: https://img.shields.io/pypi/pyversions/mcinstall
+.. image:: https://img.shields.io/pypi/pyversions/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
      :alt: PyPI - PyVersions
 
-.. image:: https://img.shields.io/pypi/v/mcinstall
-     :alt: PyPI
+.. image:: https://img.shields.io/pypi/v/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
+     :alt: PyPI - Version
 
-.. image:: https://img.shields.io/pypi/status/mcinstall
+.. image:: https://img.shields.io/pypi/status/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
      :alt: PyPI - Status
 
-.. image:: https://img.shields.io/pypi/format/mcinstall
+.. image:: https://img.shields.io/pypi/format/mcinstall.svg
+  :target: https://pypi.org/project/mcinstall
      :alt: PyPI - Format
 
 .. image:: https://img.shields.io/pypi/l/mcinstall
+  :target: https://pypi.org/project/mcinstall
      :alt: PyPI - License
 
 .. image:: https://img.shields.io/pypi/dm/mcinstall
+  :target: https://pypi.org/project/mcinstall
      :alt: PyPI - Downloads
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
-
+     
 The goal of this script is to quickly install a fresh Miniconda across different
 operating systems and use it in a CI/CD context, too. It will download a Miniconda
 binary based on your operating system, unpack the binary and install it locally.
