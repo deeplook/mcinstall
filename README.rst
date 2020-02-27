@@ -7,8 +7,8 @@ The goal of this script is to quickly install a fresh Miniconda across different
 operating systems and use it in a CI/CD context, too. It will download a Miniconda
 binary based on your operating system, unpack the binary and install it locally.
 It was tested on MacOS and Linux ok, has decent Windows support and also aims to
-support ARM6 and ARM7 on the Raspberry Pi via the (sadly no longer maintained)
-`Berryconda <https://github.com/jjhelmus/berryconda/releases>`_.
+support ARM6 and ARM7 on the Raspberry Pi via `Berryconda 
+<https://github.com/jjhelmus/berryconda/releases>`_ (sadly no longer maintained).
 
 This script has no external dependencies, but expects to be run with Python 3.6+.
 
