@@ -1,15 +1,24 @@
 #!/usr/bin/env python
 
 import sys
+from os.path import abspath, dirname, join
+
 from setuptools import setup
 
 needs_pytest = {"pytest", "test", "ptr"}.intersection(sys.argv)
 pytest_runner = ["pytest-runner"] if needs_pytest else []
+this_directory = abspath(dirname(__file__))
+with open(join(this_directory, "README.md"), encoding="utf-8") as f:
+    long_description = f.read()
 
 setup(
     name="mcinstall",
     version="0.3.0",
-    description="Install and provision a fresh Miniconda distribution from scratch.",
+    description=(
+        "Quick-install/provision a fresh Miniconda distribution from scratch."
+    ),
+    long_description_content_type="text/x-rst",
+    long_description=long_description,
     author="Dinu Gherman",
     url="https://github.com/deeplook/mcinstall",
     license="MIT",
