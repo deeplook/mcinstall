@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 
-from mcinstall import config, MinicondaInstaller
+from mcinstall import MinicondaInstaller, config
 
 
 def test_show_config():
@@ -34,9 +34,10 @@ def test_install_dependencies():
             if pkg_name == "scikit-learn":
                 pkg_name = "sklearn"
             cmd = [
-                f"{tempdir}/bin/python", "-c",
+                f"{tempdir}/bin/python",
+                "-c",
                 f"import {pkg_name}; "
-                f"print(f'{pkg_name} {{{pkg_name}.__version__}} ok')"
+                f"print(f'{pkg_name} {{{pkg_name}.__version__}} ok')",
             ]
             out = subprocess.check_output(cmd).decode("utf-8").strip()
             print(out)
@@ -44,4 +45,3 @@ def test_install_dependencies():
 
     print()
     assert not os.path.exists(tempdir)
-
