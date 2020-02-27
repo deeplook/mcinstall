@@ -1,6 +1,9 @@
 mcinstall
 =========
 
+.. image:: https://img.shields.io/travis/deeplook/mcinstall
+     :alt: Travis (.org)
+
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
 The goal of this script is to quickly install a fresh Miniconda across different
