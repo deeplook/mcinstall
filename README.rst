@@ -1,20 +1,26 @@
 mcinstall
 =========
 
-.. image:: http://img.shields.io/travis/deeplook/mcinstall.svg
-  :target: https://travis-ci.org/deeplook/mcinstall
+.. image:: https://img.shields.io/travis/deeplook/mcinstall
+     :alt: Travis (.org)
 
-.. image:: https://img.shields.io/pypi/pyversions/mcinstall.svg
-  :target: https://pypi.org/project/mcinstall
+.. image:: https://img.shields.io/pypi/pyversions/mcinstall
+     :alt: PyPI - PyVersions
 
-.. image:: https://img.shields.io/pypi/dm/mcinstall.svg
-  :target: https://pypi.org/project/mcinstall
+.. image:: https://img.shields.io/pypi/v/mcinstall
+     :alt: PyPI
 
-.. image:: https://img.shields.io/pypi/v/mcinstall.svg
-  :target: https://pypi.org/project/mcinstall
+.. image:: https://img.shields.io/pypi/status/mcinstall
+     :alt: PyPI - Status
 
-.. image:: https://img.shields.io/pypi/l/mcinstall.svg
-  :target: https://pypi.org/project/mcinstall
+.. image:: https://img.shields.io/pypi/format/mcinstall
+     :alt: PyPI - Format
+
+.. image:: https://img.shields.io/pypi/l/mcinstall
+     :alt: PyPI - License
+
+.. image:: https://img.shields.io/pypi/dm/mcinstall
+     :alt: PyPI - Downloads
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
