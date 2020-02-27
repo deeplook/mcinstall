@@ -3,13 +3,17 @@ mcinstall
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
 
-This will download a Miniconda binary based on your operating system
-for `MacOS <https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh>`_,
-`Linux <https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh>`_ and `Windows <https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe>`_
-then unpack binary and install it locally. It was tested on macOS and Linux ok, and has
-some initial Windows support.
+The goal of this script is to quickly install a fresh Miniconda across different
+operating systems and use it in a CI/CD context, too. It will download a Miniconda
+binary based on your operating system, unpack binary and install it locally. It was
+tested on MacOS and Linux ok, has decent Windows support and also aims to support
+ARM6 and ARM7 on the Raspberry Pi via the (sadly no longer maintained)
+[Berryconda](https://github.com/jjhelmus/berryconda/releases).
 
-This script has no external dependencies, but expects to be run with Python 3.
+This script has no external dependencies, but expects to be run with Python 3.6+.
+
+N.B. This project is often updated online which is why its git history might look
+strange...
 
 Installation
 ------------
