@@ -97,6 +97,8 @@ class MinicondaInstaller:
 
     def log(self, command: str):
         """Logger method to log results to ``log_path`` from ``config``.
+
+        :param command: The shell command to add to the logfile.
         """
         log_path = Path(config["log_path"]).expanduser().absolute()
         with log_path.open("a") as f:
@@ -117,6 +119,8 @@ class MinicondaInstaller:
 
     def install_miniconda(self):
         """Install Miniconda locally at desired destination.
+
+        :raises ValueError: Is raised if the download fails.
         """
         dest_path = self.clean_dest_path
         mc_blob_path = self.download_path / config["mc_blob_name"]
@@ -180,6 +184,9 @@ class MinicondaInstaller:
 
         Dependencies can be specified in a list of package names or
         a dependencies file.
+
+        :param dependencies: A list of dependency names.
+        :param dependencies_path: A file path with one dependency name per line.
         """
         dep_path = dependencies_path
         dest_path = self.clean_dest_path
@@ -226,6 +233,11 @@ class MinicondaInstaller:
         Dependencies can be specified in a list of package names or
         a dependencies file or a conda environment file (which will
         create a new environment).
+
+        :param channel: The conda channel to fetch the packages from.
+        :param dependencies: A list of dependency names.
+        :param dependencies_path: A file path with one dependency name per line.
+        :param environment_path: A file path for a conda environment file.
         """
         dep_path = dependencies_path
         env_path = environment_path
