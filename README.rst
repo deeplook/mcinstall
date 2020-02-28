@@ -19,9 +19,6 @@ mcinstall
 .. image:: https://img.shields.io/pypi/l/mcinstall.svg
   :target: https://pypi.org/project/mcinstall
 
-.. image:: https://img.shields.io/pypi/dm/mcinstall.svg
-  :target: https://pypi.org/project/mcinstall
-
 A script to quickly make/provision a fresh Miniconda installation from scratch.
      
 The goal of this script is to quickly install a fresh Miniconda across different
