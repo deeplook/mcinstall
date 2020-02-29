@@ -23,7 +23,7 @@ from subprocess import PIPE, Popen, check_output
 from typing import List, Optional
 from urllib import request
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __license__ = "MIT"
 
 
@@ -59,9 +59,12 @@ if config["system"] in known_systems:
         config["mc_name"] = "Berryconda3"
         config["mc_version"] = "2.0.0"
 
-    config["mc_blob_name"] = (
-        f"{config['mc_name']}-{config['mc_version']}-"
-        f"{config['system']}-{config['machine']}.{ext}"
+    config["mc_blob_name"] = "%s-%s-%s-%s.%s" % (
+        config["mc_name"],
+        config["mc_version"],
+        config["system"],
+        config["machine"],
+        ext,
     )
 
 
@@ -90,10 +93,10 @@ class MinicondaInstaller:
     def __del__(self):
         if self.verbose and self.installed_ok:
             if config["system"] == "Windows":
-                cmd = fr"{self.clean_dest_path}\condabin\activate"
+                cmd = r"%s\condabin\activate" % self.clean_dest_path
             else:
-                cmd = f"source {self.clean_dest_path}/bin/activate"
-            print(f'Run this to start using your fresh Miniconda: "{cmd}".')
+                cmd = "source %s/bin/activate" % self.clean_dest_path
+            print('Run this to start using your fresh Miniconda: "%s".' % cmd)
 
     def log(self, command: str):
         """Logger method to log results to ``log_path`` from ``config``.
@@ -102,19 +105,19 @@ class MinicondaInstaller:
         """
         log_path = Path(config["log_path"]).expanduser().absolute()
         with log_path.open("a") as f:
-            f.write(f"{command}\n")
+            f.write("%s\n" % command)
 
     def download(self):
         """Download Miniconda locally at desired destination.
         """
         if not self.clean_dest_path.exists():
             if self.verbose:
-                print(f"Making directory {self.clean_dest_path}.")
+                print("Making directory %s." % self.clean_dest_path)
             self.clean_dest_path.mkdir(parents=True)
 
         if not self.download_path.exists():
             if self.verbose:
-                print(f"Making directory {self.download_path}.")
+                print("Making directory %s." % self.download_path)
             self.download_path.mkdir()
 
     def install_miniconda(self):
@@ -125,19 +128,19 @@ class MinicondaInstaller:
         dest_path = self.clean_dest_path
         mc_blob_path = self.download_path / config["mc_blob_name"]
         if not mc_blob_path.exists():
-            url = f"{config['mc_base_url']}{config['mc_blob_name']}"
+            url = config["mc_base_url"] + config["mc_blob_name"]
             if self.verbose:
-                print(f"Downloading {url} ...")
+                print("Downloading %s ..." % url)
             resp = request.urlopen(url)
-            self.log(f"wget {url}")
+            self.log("wget %s" % url)
             if resp.status >= 400:
-                msg = f"Cannot download {url}. Verify URL components!"
+                msg = "Cannot download %s. Verify URL components!" % url
                 raise ValueError(msg)
             mc_blob = resp.read()
             if self.verbose:
-                print(f"Copying to {mc_blob_path} ...")
+                print("Copying to %s ..." % mc_blob_path)
             mc_blob_path.write_bytes(mc_blob)
-            self.log(f"mv {config['mc_blob_name']} {mc_blob_path}")
+            self.log("mv %s %s" % (config["mc_blob_name"], mc_blob_path))
 
         if not (
             (dest_path / "bin" / "conda").exists()
@@ -145,8 +148,8 @@ class MinicondaInstaller:
         ):
             if config["system"] == "Windows":
                 cmd = (
-                    f'start /wait "" {mc_blob_path} /InstallationType=JustMe '
-                    f"/RegisterPython=0 /S /D={dest_path}"
+                    'start /wait "" %s /InstallationType=JustMe /RegisterPython=0 /S /D=%s'
+                    % (mc_blob_path, dest_path)
                 )
                 with open("temp.bat", "w") as fh:
                     fh.write(cmd)
@@ -160,17 +163,17 @@ class MinicondaInstaller:
                 else:
                     os.remove("temp.bat")
             else:
-                cmd = f"bash {mc_blob_path} -b -f -p {dest_path}"
+                cmd = "bash %s -b -f -p %s" % (mc_blob_path, dest_path)
                 if self.verbose:
-                    print(f"Running command: {cmd}")
+                    print("Running command: %s" % cmd)
                 output = check_output(cmd.split())
                 print(output.decode("utf8"))
             self.log(cmd)
 
         if config["system"] == "Windows":
-            cmd = fr"{dest_path}\condabin\activate"
+            cmd = r"%s\condabin\activate" % dest_path
         else:
-            cmd = f"source {dest_path}/bin/activate"
+            cmd = "source %s/bin/activate" % dest_path
         self.log(cmd)
 
         self.installed_ok = True
@@ -194,30 +197,31 @@ class MinicondaInstaller:
         for dep in dependencies or []:
             # This will give output earlier when installed individually.
             if config["system"] == "Windows":
-                cmd = (
-                    fr"{dest_path}\condabin\activate && " f"pip install {dep}"
+                cmd = r"%s\condabin\activate && pip install %s" % (
+                    dest_path,
+                    dep,
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = f"{dest_path}/bin/pip install {dep}"
+                cmd = "%s/bin/pip install %s" % (dest_path, dep)
                 output = check_output(cmd.split())
             if self.verbose:
-                print(f"Running command: {cmd}")
+                print("Running command: %s" % cmd)
             self.log(cmd)
             print(output.decode("utf8"))
 
         if dependencies_path:
             if config["system"] == "Windows":
-                cmd = (
-                    fr"{dest_path}\condabin\activate && "
-                    f"pip install -r {dep_path}"
+                cmd = r"%s\condabin\activate && pip install -r %s" % (
+                    dest_path,
+                    dep_path,
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = f"{dest_path}/bin/pip install -r {dep_path}"
+                cmd = "%s/bin/pip install -r %s" % (dest_path, dep_path)
                 output = check_output(cmd.split())
             if self.verbose:
-                print(f"Running command: {cmd}")
+                print("Running command: %s" % cmd)
             self.log(cmd)
             print(output.decode("utf8"))
 
@@ -249,40 +253,50 @@ class MinicondaInstaller:
                 cmd = fr"{dest_path}\condabin\conda install -y {dep}"
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = f"{dest_path}/bin/conda install -y -c {channel} {dep}"
+                cmd = "%s/bin/conda install -y -c %s %s" % (
+                    dest_path,
+                    channel,
+                    dep,
+                )
                 output = check_output(cmd.split())
             if self.verbose:
-                print(f"Running command: {cmd}")
+                print("Running command: %s" % cmd)
             self.log(cmd)
             print(output.decode("utf8"))
 
         if dependencies_path:
             if config["system"] == "Windows":
-                cmd = (
-                    fr"{dest_path}\condabin\conda install -y "
-                    f"--file {dep_path}"
+                cmd = r"%s\condabin\conda install -y --file %s" % (
+                    dest_path,
+                    dep_path,
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = f"{dest_path}/bin/conda install -y --file {dep_path}"
+                cmd = "%s/bin/conda install -y --file %s" % (
+                    dest_path,
+                    dep_path,
+                )
                 output = check_output(cmd.split())
             if self.verbose:
-                print(f"Running command: {cmd}")
+                print("Running command: cmd" % cmd)
             self.log(cmd)
             print(output.decode("utf8"))
 
         if environment_path:
             if config["system"] == "Windows":
-                cmd = (
-                    fr"{dest_path}\condabin\conda env create "
-                    f"--file {env_path}"
+                cmd = r"%s\condabin\conda env create --file %s" % (
+                    dest_path,
+                    env_path,
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = "{dest_path}/bin/conda env create --file {env_path}"
+                cmd = "%s/bin/conda env create --file %s" % (
+                    dest_path,
+                    env_path,
+                )
                 output = check_output(cmd.split())
             if self.verbose:
-                print(f"Running command: {cmd}")
+                print("Running command: %s" % cmd)
             self.log(cmd)
             print(output.decode("utf8"))
 
@@ -291,13 +305,18 @@ def main():
     """Main function called when used on the command-line.
     """
     systems = ", ".join(known_systems)
-    desc = f"Quick-install/provision a fresh Miniconda for {systems}."
+    desc = "Quick-install/provision a fresh Miniconda for %s." % systems
     p = argparse.ArgumentParser(description=desc)
 
     p.add_argument(
         "path",
         metavar="DEST_DIR",
         help="The destination directory (will be created if needed).",
+    )
+    p.add_argument(
+        "--version", action='version',
+        version="%s %s" % (Path(sys.argv[0]), __version__),
+        help="Show version and quit."
     )
     p.add_argument(
         "--verbose", action="store_true", help="Output additional information."
@@ -336,8 +355,8 @@ def main():
 
     if config["system"] not in known_systems:
         msg = (
-            f"""Don't know how to handle operating system '{config["system"]}'. """
-            "Want to provide a patch?"
+            """Don't know how to handle operating system %s'. Want to provide a patch?"""
+            % config["system"]
         )
         print(msg)
         sys.exit(0)

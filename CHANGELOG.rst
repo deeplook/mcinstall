@@ -1,0 +1,11 @@
+Changelog
+=========
+
+0.3.1 (unreleased)
+------------------
+* improve project setup
+* add support for Python 3.5 to make it easier to use on Raspian
+
+0.3.0 (2020-02-27)
+------------------
+* first public release on PyPI
