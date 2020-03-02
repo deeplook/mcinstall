@@ -28,7 +28,8 @@ It was tested on MacOS and Linux ok, has decent Windows support and also aims to
 support ARM6 and ARM7 on the Raspberry Pi via `Berryconda 
 <https://github.com/jjhelmus/berryconda/releases>`_ (sadly no longer maintained).
 
-This script has no external dependencies, but expects to be run with Python 3.6+.
+This script has no external dependencies, but expects to be run with Python 3.5+,
+3.5 only because this is likely still the prevalent Python 3 version on Rasbian.
 
 N.B. This project is often updated online which is why its git history might look
 strange...

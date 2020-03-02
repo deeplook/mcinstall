@@ -23,7 +23,7 @@ from subprocess import PIPE, Popen, check_output
 from typing import List, Optional
 from urllib import request
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __license__ = "MIT"
 
 
