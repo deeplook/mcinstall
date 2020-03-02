@@ -26,6 +26,7 @@ def test_install_dependencies():
         mci = MinicondaInstaller(tempdir, verbose=True)
         mci.download()
         mci.install_miniconda()
+        mci.update_miniconda_base()
         mci.install_pip(dependencies=["geopy"])
         mci.install_conda(channel="conda-forge", dependencies=["scikit-learn"])
 

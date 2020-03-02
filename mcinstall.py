@@ -175,6 +175,13 @@ class MinicondaInstaller:
 
         self.installed_ok = True
 
+    def update_miniconda_base(self):
+        cmd = "%s/bin/conda update -n base -c defaults conda" % self.clean_dest_path
+        print(cmd)
+        self.log(cmd)
+        output = check_output(cmd.split())
+        print(output.decode("utf8"))
+
     def install_pip(
         self,
         dependencies: Optional[List[str]] = None,
