@@ -250,7 +250,7 @@ class MinicondaInstaller:
         for dep in dependencies or []:
             # This will give output earlier when installed individually.
             if config["system"] == "Windows":
-                cmd = fr"{dest_path}\condabin\conda install -y {dep}"
+                cmd = r"%s\condabin\conda install -y %s" % (dest_path, dep)
                 output = check_output(cmd.split(), shell=True)
             else:
                 cmd = "%s/bin/conda install -y -c %s %s" % (
