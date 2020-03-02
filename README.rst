@@ -1,7 +1,7 @@
 mcinstall
 =========
 
-.. image:: https://img.shields.io/travis/deeplook/mcinstall.svg
+.. image:: https://img.shields.io/travis/deeplook/mcinstall/master.svg
   :target: https://travis-ci.org/deeplook/mcinstall
 
 .. image:: https://img.shields.io/pypi/pyversions/mcinstall.svg
