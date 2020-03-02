@@ -28,12 +28,12 @@ def test_install_dependencies():
         mci.install_miniconda()
         mci.update_miniconda_base()
         mci.install_pip(dependencies=["geopy"])
-        mci.install_conda(channel="conda-forge", dependencies=["scikit-learn"])
+        mci.install_conda(channel="conda-forge", dependencies=["pyyaml"])
 
         # Run Miniconda's Python and import the installed dependencies.
-        for pkg_name in ["geopy", "scikit-learn"]:
-            if pkg_name == "scikit-learn":
-                pkg_name = "sklearn"
+        for pkg_name in ["geopy", "pyyaml"]:
+            if pkg_name == "pyyaml":
+                pkg_name = "yaml"
             cmd = [
                 f"{tempdir}/bin/python",
                 "-c",
