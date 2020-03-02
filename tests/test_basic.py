@@ -42,7 +42,7 @@ def test_install_dependencies():
             ]
             out = subprocess.check_output(cmd).decode("utf-8").strip()
             print(out)
-            assert re.match(f"{pkg_name} .+ ok", out)
+            assert re.match("%s .+ ok" % pkg_name, out)
 
     print()
     assert not os.path.exists(tempdir)
