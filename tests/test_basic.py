@@ -35,10 +35,10 @@ def test_install_dependencies():
             if pkg_name == "pyyaml":
                 pkg_name = "yaml"
             cmd = [
-                f"{tempdir}/bin/python",
+                "%s/bin/python" % tempdir,
                 "-c",
-                f"import {pkg_name}; "
-                f"print(f'{pkg_name} {{{pkg_name}.__version__}} ok')",
+                '''import %s; print("%s %%s ok" %% %s.__version__)''' % \
+                    (pkg_name, pkg_name, pkg_name)
             ]
             out = subprocess.check_output(cmd).decode("utf-8").strip()
             print(out)
