@@ -67,6 +67,7 @@ if config["system"] in known_systems:
         ext,
     )
 
+
 class MinicondaInstaller:
     """A tiny installer to bring you up to Python/Pip/Conda speed in seconds.
 
@@ -177,10 +178,18 @@ class MinicondaInstaller:
         self.installed_ok = True
 
     def update_miniconda_base(self):
-        cmd = "%s/bin/conda update -n base -c defaults conda" % self.clean_dest_path
+        """
+        Update conda post installation.
+        """
+        if config["system"] == "Windows":
+            cmd = r"%s\condabin\conda update -n base -c defaults conda" \
+                  % self.clean_dest_path
+            output = check_output(cmd.split(), shell=True)
+        else:
+            cmd = r"%s/bin/conda update -n base -c defaults conda" % self.clean_dest_path
+            output = check_output(cmd.split())
         print(cmd)
         self.log(cmd)
-        output = check_output(cmd.split())
         print(output.decode("utf8"))
 
     def install_pip(
@@ -367,6 +376,7 @@ def main():
         inst = MinicondaInstaller(dest_path=args.path, verbose=args.verbose)
         inst.download()
         inst.install_miniconda()
+        inst.update_miniconda_base()
         if args.pip_dependencies or args.pip_dependencies_path:
             inst.install_pip(
                 dependencies=args.pip_dependencies.split(",")
