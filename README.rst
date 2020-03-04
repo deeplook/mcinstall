@@ -25,6 +25,12 @@ mcinstall
 .. image:: https://img.shields.io/badge/likes-Rasberry%20Pi-%23C51A4A?logo=raspberry%20pi
   :target: https://pypi.org/project/mcinstall
 
+.. image:: https://img.shields.io/lgtm/alerts/g/deeplook/mcinstall.svg?logo=lgtm&logoWidth=18
+  :target: https://lgtm.com/projects/g/deeplook/mcinstall/alerts/
+
+.. image:: https://img.shields.io/lgtm/grade/python/g/deeplook/mcinstall.svg?logo=lgtm&logoWidth=18
+  :target: https://lgtm.com/projects/g/deeplook/mcinstall/context:python
+
 A script to quickly make/provision a fresh Miniconda installation from scratch.
      
 The goal of this script is to quickly install a fresh Miniconda across different
