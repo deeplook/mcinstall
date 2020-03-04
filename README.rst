@@ -18,6 +18,12 @@ mcinstall
 
 .. image:: https://img.shields.io/pypi/l/mcinstall.svg
   :target: https://pypi.org/project/mcinstall
+  
+.. image:: https://img.shields.io/badge/platform-unix%20|%20win%20|%20osx-informational.svg
+  :target: https://pypi.org/project/mcinstall
+
+.. image:: https://img.shields.io/badge/likes-Rasberry%20Pi-%23C51A4A?logo=raspberry%20pi
+  :target: https://pypi.org/project/mcinstall
 
 A script to quickly make/provision a fresh Miniconda installation from scratch.
      
