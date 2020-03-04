@@ -19,10 +19,10 @@ mcinstall
 .. image:: https://img.shields.io/pypi/l/mcinstall.svg
   :target: https://pypi.org/project/mcinstall
   
-.. image:: https://img.shields.io/badge/platform-unix%20|%20win%20|%20osx-informational.svg
+.. image:: https://img.shields.io/badge/platform-unix%20|%20win%20|%20osx%20|%20arm-informational.svg
   :target: https://pypi.org/project/mcinstall
 
-.. image:: https://img.shields.io/badge/likes-Rasberry%20Pi-%23C51A4A?logo=raspberry%20pi
+.. image:: https://img.shields.io/badge/likes-Raspberry%20Pi-%23C51A4A?logo=raspberry%20pi
   :target: https://pypi.org/project/mcinstall
 
 .. image:: https://img.shields.io/lgtm/alerts/g/deeplook/mcinstall.svg?logo=lgtm&logoWidth=18
