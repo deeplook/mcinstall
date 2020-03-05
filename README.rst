@@ -49,7 +49,7 @@ strange...
 Installation
 ------------
 
-Very briefly:
+Very briefly, it's::
 
      pip install mcinstall
 
