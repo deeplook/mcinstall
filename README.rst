@@ -49,11 +49,8 @@ strange...
 Installation
 ------------
 
-Very briefly, it's::
-
-     pip install mcinstall
-
-More details are available in `INSTALL.rst <INSTALL.rst>`_.
+Very briefly, it's ``pip install mcinstall``. More details are available in
+`INSTALL.rst <INSTALL.rst>`_.
 
 Sample Usage
 ------------
@@ -139,13 +136,3 @@ Sample log file (``mcinstall.log``)::
     source ~/Downloads/torchy/bin/activate
     ~/Downloads/torchy/bin/pip install jupyter
     ~/Downloads/torchy/bin/pip install torch
-
-TO DO
------
-
-- improve logging executed commands to reproduce them as a shell script
-- add self.clean_dest_path to MinicondaInstaller.__init__
-- same with self.download_path
-- consolidate Windows support
-- improve configuration
-- make a sample screencast with asciinema
