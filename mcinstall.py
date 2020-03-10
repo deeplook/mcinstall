@@ -182,13 +182,16 @@ class MinicondaInstaller:
         Update conda post installation.
         """
         if config["system"] == "Windows":
-            cmd = r"%s\condabin\conda update -n base -c defaults conda" \
+            cmd = r"%s\condabin\conda update -y -n base -c defaults conda" \
                   % self.clean_dest_path
+            if self.verbose:
+                print("Running command: %s" % cmd)
             output = check_output(cmd.split(), shell=True)
         else:
-            cmd = r"%s/bin/conda update -n base -c defaults conda" % self.clean_dest_path
+            cmd = r"%s/bin/conda update -y -n base -c defaults conda" % self.clean_dest_path
+            if self.verbose:
+                print("Running command: %s" % cmd)
             output = check_output(cmd.split())
-        print(cmd)
         self.log(cmd)
         print(output.decode("utf8"))
 
