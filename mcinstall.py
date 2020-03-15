@@ -199,6 +199,8 @@ class MinicondaInstaller:
         self,
         dependencies: Optional[List[str]] = None,
         dependencies_path: Optional[str] = None,
+        index_url: Optional[str] = None,
+        extra_index_url: Optional[List[str]] = None
     ):
         """Pip-install dependencies.
 
@@ -207,20 +209,31 @@ class MinicondaInstaller:
 
         :param dependencies: A list of dependency names.
         :param dependencies_path: A file path with one dependency name per line.
+        :param index_url: URL for package index.
+        :param extra_index_url: Additional URL for package index.
         """
         dep_path = dependencies_path
         dest_path = self.clean_dest_path
+        pip_cmd = "pip install"
+        if index_url:
+            pip_cmd = r"%s --index-url %s" % (pip_cmd, index_url)
+        if extra_index_url:
+            extra_index_urls = extra_index_url.split(",")
+            print(str(extra_index_urls))
+            for url in extra_index_urls:
+                pip_cmd = r"%s --extra-index-url %s" % (pip_cmd, url)
 
         for dep in dependencies or []:
             # This will give output earlier when installed individually.
             if config["system"] == "Windows":
-                cmd = r"%s\condabin\activate && pip install %s" % (
+                cmd = r"%s\condabin\activate && %s %s" % (
                     dest_path,
+                    pip_cmd,
                     dep,
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = "%s/bin/pip install %s" % (dest_path, dep)
+                cmd = "%s/bin/%s %s" % (dest_path, pip_cmd, dep)
                 output = check_output(cmd.split())
             if self.verbose:
                 print("Running command: %s" % cmd)
@@ -229,13 +242,14 @@ class MinicondaInstaller:
 
         if dependencies_path:
             if config["system"] == "Windows":
-                cmd = r"%s\condabin\activate && pip install -r %s" % (
+                cmd = r"%s\condabin\activate && %s -r %s" % (
                     dest_path,
+                    pip_cmd,
                     dep_path,
                 )
                 output = check_output(cmd.split(), shell=True)
             else:
-                cmd = "%s/bin/pip install -r %s" % (dest_path, dep_path)
+                cmd = "%s/bin/%s -r %s" % (dest_path, pip_cmd, dep_path)
                 output = check_output(cmd.split())
             if self.verbose:
                 print("Running command: %s" % cmd)
@@ -345,6 +359,16 @@ def main():
         help="Path of a pip requirements file, usually named requirements.txt.",
     )
     p.add_argument(
+        "--pip-index-url",
+        metavar="URL",
+        help="Base URL of the Python Package Index",
+    )
+    p.add_argument(
+        "--pip-extra-index-url",
+        metavar="URL",
+        help="Extra URLs of package indexes to use in addition to --pip-index-url",
+    )
+    p.add_argument(
         "--conda-dependencies",
         metavar="LIST",
         default="",
@@ -386,6 +410,8 @@ def main():
                 if args.pip_dependencies
                 else None,
                 dependencies_path=args.pip_dependencies_path,
+                index_url=args.pip_index_url,
+                extra_index_url=args.pip_extra_index_url
             )
         if (
             args.conda_dependencies
