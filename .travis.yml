@@ -17,6 +17,7 @@ matrix:
         - pip3 install --upgrade pytest
         - pip3 install codecov
       env: PATH=/c/Python35:/c/Python35/Scripts:$PATH
+      script: pytest -s
     - name: "Python 3.6.8 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell       # 'language: python' is an error on Travis CI Windows
@@ -27,6 +28,7 @@ matrix:
         - pip3 install --upgrade pytest
         - pip3 install codecov
       env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
+      script: pytest -s
     - name: "Python 3.7.4 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell       # 'language: python' is an error on Travis CI Windows
@@ -37,6 +39,7 @@ matrix:
         - pip3 install --upgrade pytest
         - pip3 install codecov
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+      script: pytest -s
 install:
   - pip install tox-travis
 script:
