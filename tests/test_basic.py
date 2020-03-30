@@ -44,18 +44,32 @@ def test_install_dependencies():
             for pkg_name in ["geopy", "pyyaml"]:
                 if pkg_name == "pyyaml":
                     pkg_name = "yaml"
-                cmd = [
-                    py_exe,
-                    "-c",
-                    '''import %s; print("%s %%s ok" %% %s.__version__)''' % \
-                        (pkg_name, pkg_name, pkg_name)
-                ]
+                if platform.system() == "Windows":
+                    cmd = [
+                        "%s\\condabin\\activate"%(tempdir),
+                        "&&",
+                        py_exe,
+                        "-c",
+                        '''import %s; print("%s %%s ok" %% %s.__version__)''' % \
+                            (pkg_name, pkg_name, pkg_name)
+                    ]
+                else:
+                    cmd = [
+                        py_exe,
+                        "-c",
+                        '''import %s; print("%s %%s ok" %% %s.__version__)''' % \
+                            (pkg_name, pkg_name, pkg_name)
+                    ]
+
                 if platform.system() == "Windows":
                     out = subprocess.check_output(cmd, shell=True).decode("utf-8").strip()
                 else:
                     out = subprocess.check_output(cmd).decode("utf-8").strip()
                 print(out)
-                assert re.match("%s .+ ok" % pkg_name, out)
+                if platform.system() == "Windows":
+                    assert re.search("%s .+ ok" % pkg_name, out)
+                else:
+                    assert re.match("%s .+ ok" % pkg_name, out)
     except NotADirectoryError as err:
         print(err)
         shutil.rmtree(tempdir)
