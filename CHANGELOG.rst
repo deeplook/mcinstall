@@ -4,8 +4,9 @@ Changelog
 0.3.1 (unreleased)
 ------------------
 * improve project setup
-* add support for Python 3.5 to make it easier to use on Raspian
+* add support for Python 3.5 to make it easier to use on Raspbian
 * add a conda update method (base env)
+* add CI support for Windows
 
 0.3.0 (2020-02-27)
 ------------------
