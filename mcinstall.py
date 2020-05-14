@@ -131,7 +131,10 @@ class MinicondaInstaller:
             url = config["mc_base_url"] + config["mc_blob_name"]
             if self.verbose:
                 print("Downloading %s ..." % url)
-            resp = request.urlopen(url)
+            user_agent = "Mozilla / 5.0 (X11 Linux x86_64) AppleWebKit / 537.36 (KHTML, like Gecko) Chrome / 52.0.2743.116 Safari / 537.36"
+            headers = {"User-Agent": user_agent}
+            req = request.Request(url, headers=headers)
+            resp = request.urlopen(req)
             self.log("wget %s" % url)
             if resp.status >= 400:
                 msg = "Cannot download %s. Verify URL components!" % url
