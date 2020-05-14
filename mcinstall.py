@@ -131,7 +131,7 @@ class MinicondaInstaller:
             url = config["mc_base_url"] + config["mc_blob_name"]
             if self.verbose:
                 print("Downloading %s ..." % url)
-            user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
+            user_agent = "Mozilla / 5.0 (X11 Linux x86_64) AppleWebKit / 537.36 (KHTML, like Gecko) Chrome / 52.0.2743.116 Safari / 537.36"
             headers = {"User-Agent": user_agent}
             req = request.Request(url, headers=headers)
             resp = request.urlopen(req)
