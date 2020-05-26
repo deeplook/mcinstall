@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3.1 (unreleased)
+0.3.1 (2020-05-26)
 ------------------
 * improve project setup
 * add support for Python 3.5 to make it easier to use on Raspbian
