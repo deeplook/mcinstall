@@ -17,3 +17,5 @@ Or you clone the repo locally and install the package like this::
      git clone https://github.com/deeplook/mcinstall.git
      cd mcinstall
      pip install -e .
+
+For obvious reasons it makes little sense to install ``mcinstall`` with ``conda``.
